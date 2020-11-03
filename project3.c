@@ -9,7 +9,9 @@ int arr[] = {7, 12, 19, 3, 18, 4, 2, 6, 15, 8}; //10 values sorted: 2,3,4,6,7,8,
 
 //int arr[] = {100, 7, 12, 30, 34, 19, 3, 50, 22, 18, 4, 10, 2, 40, 6, 15, 8};// 17 values sorted: 2, 3, 4, 6, 7, 8, 10, 12, 15, 18, 19, 22, 30, 34, 40, 50, 100
 
-//int arr[] = {7, 12, 19, 3, 18, 4, 2, 6, 15, 8, 7, 12, 19, 3, 18, 4, 2, 6, 15, 8,7, 12, 19, 3, 18, 4, 2, 6, 15, 8,7, 12, 19, 3, 18, 4, 2, 6, 15, 8,7, 12, 19, 3, 18, 4, 2, 6, 15, 8,7, 12, 19, 3, 18, 4, 2, 6, 15, 8,7, 12, 19, 3, 18, 4, 2, 6, 15, 8,7, 12, 19, 3, 18, 4, 2, 6, 15, 8, 7, 12, 19, 3, 18, 4, 2, 6, 15, 8,7, 12, 19, 3, 18, 4, 2, 6, 15, 8};// 100 values
+//int arr[] = {3,2,1};//3 values: odd test Sorted: 1,2,3
+
+//int arr[] = {7, 12, 19, 3, 18, 4, 2, 6, 15, 8, 7, 12, 19, 3, 18, 4, 2, 6, 15, 8,7, 12, 19, 3, 18, 4, 2, 6, 15, 8,7, 12, 19, 3, 18, 4, 2, 6, 15, 8,7, 12, 19, 3, 18, 4, 2, 6, 15, 8,7, 12, 19, 3, 18, 4, 2, 6, 15, 8,7, 12, 19, 3, 18, 4, 2, 6, 15, 8,7, 12, 19, 3, 18, 4, 2, 6, 15, 8, 7, 12, 19, 3, 18, 4, 2, 6, 15, 8,7, 12, 19, 3, 18, 4, 2, 6, 15, 8};// 100 values Sorted: same as length 10 but values 10x over
 
 //test values above^
 
@@ -86,7 +88,7 @@ void *mergeArraysSort()
     insertionSort2(sortedArr);
 }
 
-void copyArrays()
+void copyArraysEven()
 {
     for (int i = 0; i < SIZE / 2; i++) //copies first half of array
     {
@@ -103,9 +105,35 @@ void copyArrays()
     //sorted = 2,4,6,8,15
 }
 
+//3 2 1
+void copyArraysOdd()
+{
+    int length = mid +1;
+    int length2 = mid;
+
+    for (int i = 0; i < length; i++) //copies first half of array
+    {
+        firstHalf[i] = arr[i];
+        printf("%d ", firstHalf[i]);
+    }
+
+    for (int j = 0; j < length2; j++) //copies second half of array
+    {
+        secondHalf[j] = arr[length2 + j + 1];
+        printf("%d ", secondHalf[j]);
+    }
+}
+
 int main(int argc, char *argv[])
 {
-    copyArrays();//copies values from arr to 2 arrays
+    if(SIZE % 2 == 0)
+    {
+        copyArraysEven();//copies values from arr to 2 arrays
+    }
+    else
+    {
+        copyArraysOdd();
+    }
 
     pthread_t thread, thread2, parent;
     pthread_create(&thread, NULL, (void *)insertionSort, (void *)(intptr_t)firstHalf);
