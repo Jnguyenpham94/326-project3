@@ -4,10 +4,10 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-//int arr[] = {7, 12, 19, 3, 18, 4, 2, 6, 15, 8}; //10 values sorted: 2,3,4,6,7,8,12,15,18,19
 //test values below:
+int arr[] = {7, 12, 19, 3, 18, 4, 2, 6, 15, 8}; //10 values sorted: 2,3,4,6,7,8,12,15,18,19
 
-int arr[] = {5, 3, 2, 1, 4}; //5 values: odd test Sorted: 1,2,3,4,5
+//int arr[] = {5, 3, 2, 1, 4}; //5 values: odd test Sorted: 1,2,3,4,5
 
 //int arr[] = {7, 12, 19, 3, 18, 4, 2, 6, 15, 8, 7, 12, 19, 3, 18, 4, 2, 6, 15, 8,7, 12, 19, 3, 18, 4, 2, 6, 15, 8,7, 12, 19, 3, 18, 4, 2, 6, 15, 8,7, 12, 19, 3, 18, 4, 2, 6, 15, 8,7, 12, 19, 3, 18, 4, 2, 6, 15, 8,7, 12, 19, 3, 18, 4, 2, 6, 15, 8,7, 12, 19, 3, 18, 4, 2, 6, 15, 8, 7, 12, 19, 3, 18, 4, 2, 6, 15, 8,7, 12, 19, 3, 18, 4, 2, 6, 15, 8};// 100 values Sorted: same as length 10 but values 10x over
 
@@ -20,8 +20,6 @@ int firstHalf[SIZE / 2];                    // stores first half of arr
 int secondHalf[SIZE / 2];                   // stores second half of arr
 int length;
 int length2;
-
-pthread_mutex_t lock;
 
 void *insertionSort(int array[])
 {
