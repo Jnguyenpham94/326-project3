@@ -7,9 +7,7 @@
 //int arr[] = {7, 12, 19, 3, 18, 4, 2, 6, 15, 8}; //10 values sorted: 2,3,4,6,7,8,12,15,18,19
 //test values below:
 
-//int arr[] = {100, 7, 12, 30, 34, 19, 3, 50, 22, 18, 4, 10, 2, 40, 6, 15, 8};// 17 values sorted: 2, 3, 4, 6, 7, 8, 10, 12, 15, 18, 19, 22, 30, 34, 40, 50, 100
-
-int arr[] = {3,2,1};//3 values: odd test Sorted: 1,2,3
+int arr[] = {5, 3, 2, 1, 4}; //5 values: odd test Sorted: 1,2,3,4,5
 
 //int arr[] = {7, 12, 19, 3, 18, 4, 2, 6, 15, 8, 7, 12, 19, 3, 18, 4, 2, 6, 15, 8,7, 12, 19, 3, 18, 4, 2, 6, 15, 8,7, 12, 19, 3, 18, 4, 2, 6, 15, 8,7, 12, 19, 3, 18, 4, 2, 6, 15, 8,7, 12, 19, 3, 18, 4, 2, 6, 15, 8,7, 12, 19, 3, 18, 4, 2, 6, 15, 8,7, 12, 19, 3, 18, 4, 2, 6, 15, 8, 7, 12, 19, 3, 18, 4, 2, 6, 15, 8,7, 12, 19, 3, 18, 4, 2, 6, 15, 8};// 100 values Sorted: same as length 10 but values 10x over
 
@@ -20,6 +18,8 @@ int mid = SIZE / 2;                         //middle value used for indexing
 int sortedArr[SIZE];                        //final location of sorted values
 int firstHalf[SIZE / 2];                    // stores first half of arr
 int secondHalf[SIZE / 2];                   // stores second half of arr
+int length;
+int length2;
 
 pthread_mutex_t lock;
 
@@ -74,21 +74,7 @@ void *insertionSort2(int array[])
     printf("\n");
 }
 
-void *mergeArraysSort()
-{
-    for (int i = 0; i < mid; i++)
-    {
-        sortedArr[i] = firstHalf[i];
-    }
-
-    for (int j = 0; j < mid; j++)
-    {
-        sortedArr[mid + j] = secondHalf[j];
-    }
-    insertionSort2(sortedArr);
-}
-
-void copyArraysEven()
+void *copyArraysEven()
 {
     for (int i = 0; i < mid; i++) //copies first half of array
     {
@@ -105,23 +91,58 @@ void copyArraysEven()
     //sorted = 2,4,6,8,15
 }
 
-//3 2 1
-void copyArraysOdd()
+//5, 3, 2, 1, 4
+void *copyArraysOdd()
 {
-    int length = mid + 1;
-    int length2 = mid;
-
+    length = mid + 1;
+    length2 = mid;
+    printf("FIRST HALF: ");
     for (int i = 0; i < length; i++) //copies first half of array
     {
         firstHalf[i] = arr[i];
         printf("%d ", firstHalf[i]);
     }
-
+    printf("SECOND HALF: ");
     for (int j = 0; j < length2; j++) //copies second half of array
     {
         secondHalf[j] = arr[length2 + j + 1];
         printf("%d ", secondHalf[j]);
     }
+}
+
+void *mergeArraysSortEven()
+{
+    for (int i = 0; i < mid; i++)
+    {
+        sortedArr[i] = firstHalf[i];
+    }
+
+    for (int j = 0; j < mid; j++)
+    {
+        sortedArr[mid + j] = secondHalf[j];
+    }
+    insertionSort2(sortedArr);
+}
+
+//5, 3, 2, 1, 4
+void *mergeArraysSortOdd()
+{
+    int i = 0;
+    for (; i < SIZE - length; i++)
+    {
+        //printf("FIRSTHALF: %d \n", firstHalf[i]);
+        sortedArr[i] = firstHalf[i];
+        //printf("SORTED: %d \n", sortedArr[i]);
+    }
+    
+    for (int j = 0; j < SIZE - length2; j++)
+    {
+        //printf("FIRSTHALF: %d \n", firstHalf[i]);
+        sortedArr[i] = secondHalf[j];
+        //printf("SORTED: %d \n", sortedArr[i]);
+        i++;
+    }
+    insertionSort2(sortedArr);
 }
 
 int main(int argc, char *argv[])
@@ -135,25 +156,33 @@ int main(int argc, char *argv[])
         copyArraysOdd();
     }
 
-    pthread_t thread, thread2, parent;
-    pthread_create(&thread, NULL, (void *)insertionSort, (void *)(intptr_t)firstHalf);
-    pthread_join(thread, NULL);
+    pthread_t thread1, thread2, parent;
+    pthread_create(&thread1, NULL, (void *)insertionSort, (void *)(intptr_t)firstHalf);
     pthread_create(&thread2, NULL, (void *)insertionSort, (void *)(intptr_t)secondHalf);
+    pthread_join(thread1, NULL);
     pthread_join(thread2, NULL);
-    pthread_create(&parent, NULL, (void *)mergeArraysSort, NULL);
-    pthread_join(parent, NULL);
+    if (SIZE % 2 == 0)
+    {
+        pthread_create(&parent, NULL, (void *)mergeArraysSortEven, NULL);
+        pthread_join(parent, NULL);
+    }
+    else
+    {
+        pthread_create(&parent, NULL, (void *)mergeArraysSortOdd, NULL);
+        pthread_join(parent, NULL);
+    }
 
     /*testing output of 2 subarrays
+    printf("FIRST: ");
     for (int i = 0; i < mid; i++)
     {
         printf("%d ", firstHalf[i]);
     }
-    printf("SECOND\n");
+    printf("\nSECOND");
     for (int i = 0; i < mid; i++)
     {
         printf("%d ", secondHalf[i]);
     }
     */
-
     return 0;
 }
